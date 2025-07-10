@@ -1,35 +1,25 @@
 package com.ingress_track.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ingress_track.dto.UserDto;
+import com.ingress_track.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-//TODO UserController structure and responses
-
+@AllArgsConstructor
 @RestController
+@RequestMapping("/api/users")
+
 public class UserController{
-	
-	
-	@GetMapping("/authenticate")
-	public Boolean AuthenticateUser() {
-		return true;
+
+	private UserService userService;
+
+	@PostMapping
+	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
+		UserDto savedUser = userService.createUser(userDto);
+		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 	}
-	
-	@PostMapping("index")
-	public String index() {
-		return "user";
-	}
-	
-	
-	@PostMapping("/add-user")
-	public String AddUser() {
-		return "sample";
-	}
-	
-	
-	@GetMapping("/get-users")
-	public String GetUsers(){
-		return "Get Users!";
-	}
+
 	
 }
