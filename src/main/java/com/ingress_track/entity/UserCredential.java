@@ -10,29 +10,33 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Getter
+@Setter
 @Entity
 @Table(name = "it_user_credentials")
 public class UserCredential {
-
-    @Id
-    @Column(name = "user_id" , unique = true, nullable = false)
-    private Long userId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "username")
+
+    @Id
+    @Column(name = "user_id" , unique = true, nullable = false)
+    private Long userId;
+
+    @Column(name = "username", unique = true, nullable = false)
     private String userName;
 
     @Column(name = "password", nullable = false)
     private String passWord;
+
+    @Column(name = "role",nullable = false)
+    private int role = 1;
 
     @CreationTimestamp
     @Column(name = "created_at" , updatable = false)
