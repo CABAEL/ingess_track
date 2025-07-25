@@ -22,6 +22,9 @@ public class UserCredentialDto {
     @NotBlank
     private String password;
 
+    @NotBlank
+    private int role;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
