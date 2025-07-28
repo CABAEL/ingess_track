@@ -5,6 +5,7 @@ import com.ingress_track.util.ResponseMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
         Map<String, String> errors = Map.of("error", ex.getMessage());
+        return buildErrorResponse(request, HttpStatus.BAD_REQUEST, errors);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        Map<String, String> errors = Map.of("error", "Required request body is missing or malformed");
         return buildErrorResponse(request, HttpStatus.BAD_REQUEST, errors);
     }
 
