@@ -30,14 +30,15 @@ public class AuthServiceImpl implements AuthService {
         String username = authRequestDto.getUsername();
 
         UserCredential userCredential = userCredentialRepository.findByUserName(username)
-                .orElseThrow(() -> new RuntimeException("User not found with username: " + authRequestDto.getUsername()));
+                .orElse(null);
 
-        if (!securityConfig.passwordEncoder().matches(authRequestDto.getPassword(), userCredential.getPassWord())) {
+        if (userCredential == null ||
+                !securityConfig.passwordEncoder().matches(authRequestDto.getPassword(), userCredential.getPassWord())) {
             throw new UnauthorizedException("Invalid credentials!");
         }
 
         Map<String, Object> claims = Map.of(
-                "role", String.valueOf(userCredential.getRole()),  // optionally dynamic later
+                "role", String.valueOf(userCredential.getRole()),
                 "userId", userCredential.getUserId()
         );
 

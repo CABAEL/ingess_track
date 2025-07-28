@@ -9,7 +9,7 @@ import java.util.Map;
 public class JwtUtil {
 
     private static final String SECRET_KEY = "your-256-bit-secret-key-change-this-please!!";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 30; // 30 minutes in milliseconds
+    private static final long EXPIRATION_TIME = 1000 * 60 * 15; // 15 minutes in milliseconds
 
 
     private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
