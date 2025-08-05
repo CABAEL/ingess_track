@@ -1,7 +1,9 @@
 package com.ingress_track.filter;
 
+import com.ingress_track.exception.GlobalExceptionHandler;
 import com.ingress_track.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,6 +24,9 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
+    private final JwtUtil jwtUtil;
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -38,30 +43,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = authHeader.substring(7);
 
         try {
-            // Validate and extract claims
-            if (!JwtUtil.isTokenExpired(token)) {
-                Claims claims = JwtUtil.getClaims(token);
+            if (!jwtUtil.isTokenExpired(token)) {
+                Claims claims = jwtUtil.getClaims(token);
                 String username = claims.getSubject();
 
-                // Proceed if user is not already authenticated
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
+
             } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token expired");
+                globalExceptionHandler.handleUnauthorized(response, "Token is expired");
                 return;
             }
 
+        } catch (ExpiredJwtException e) {
+            globalExceptionHandler.handleUnauthorized(response, "Token is expired");
+            return;
         } catch (JwtException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid token");
+            globalExceptionHandler.handleUnauthorized(response, "Invalid token: " + e.getLocalizedMessage());
             return;
         }
 
         filterChain.doFilter(request, response);
+
     }
+
+
 }
