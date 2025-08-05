@@ -27,9 +27,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/authenticate").permitAll() // allow unauthenticated access
-                        .anyRequest().authenticated() // all other endpoints require login
-                ).exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint)
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/authenticate").permitAll()
+                .anyRequest().authenticated())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint)
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -1,6 +1,7 @@
 package com.ingress_track.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,18 +30,25 @@ public class UserCredential {
     @Column(name = "user_id" , unique = true, nullable = false)
     private Long userId;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false, length = 20)
+    @Size(max = 20)
     private String userName;
 
     @Column(name = "password", nullable = false)
+    @Size(max = 255)
     private String passWord;
 
     @Column(name = "role",nullable = false)
     private int role = 1;
 
+    @Column(name = "user_secret",nullable = true, length = 60)
+    @Size(max = 60)
+    private String userSecret;
+
     @CreationTimestamp
     @Column(name = "created_at" , updatable = false)
     private LocalDateTime createdAt;
+
 
     @UpdateTimestamp
     @Column(name = "updated_at")

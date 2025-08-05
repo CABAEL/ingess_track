@@ -12,6 +12,7 @@ import com.ingress_track.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Map;
 
 
@@ -22,10 +23,11 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private UserCredentialRepository userCredentialRepository;
     private SecurityConfig securityConfig;
-
+    private final JwtUtil jwtUtil;
 
     @Override
-    public AuthResponseDto AuthenticateUser(AuthRequestDto authRequestDto){
+    public AuthResponseDto AuthenticateUser(AuthRequestDto authRequestDto , String clientIp, String userAgent){
+
 
         String username = authRequestDto.getUsername();
 
@@ -38,11 +40,17 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Map<String, Object> claims = Map.of(
+                "iat", Instant.now().getEpochSecond(),
                 "role", String.valueOf(userCredential.getRole()),
-                "userId", userCredential.getUserId()
+                "userId", userCredential.getUserId(),
+                "client_ip",clientIp,
+                "user_agent",userAgent
         );
 
-        String token = JwtUtil.generateToken(username, claims);
+        System.out.println(claims);
+
+
+        String token = jwtUtil.generateToken(username, claims);
 
         AuthResponseDto response = new AuthResponseDto();
         response.setUsername(userCredential.getUserName());

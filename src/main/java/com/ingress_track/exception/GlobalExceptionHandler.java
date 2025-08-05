@@ -3,6 +3,7 @@ package com.ingress_track.exception;
 import com.ingress_track.util.ApiUtil;
 import com.ingress_track.util.ResponseMessages;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,10 +41,27 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(request, HttpStatus.BAD_REQUEST, errors);
     }
 
+    public void handleUnauthorized(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("""
+            {
+                "status": 401,
+                "message": "Request Failed",
+                "errors": {
+                    "error": "%s"
+                }
+            }
+        """.formatted(message));
+    }
+
 
     private ResponseEntity<Object> buildErrorResponse(HttpServletRequest request, HttpStatus status, Map<String, String> errors) {
         return ResponseEntity
                 .status(status)
                 .body(ApiUtil.ResponseHandler(request, status, ResponseMessages.REQ_FAILED_MSG, errors));
     }
+
+
+
 }

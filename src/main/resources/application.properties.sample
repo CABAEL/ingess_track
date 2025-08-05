@@ -1,0 +1,20 @@
+spring.application.name=ingress_track
+
+server.port=9090
+
+# PostgreSQL Configuration
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.driver-class-name=
+
+# JPA Settings
+#update or create
+spring.jpa.hibernate.ddl-auto=
+spring.jpa.show-sql=
+spring.jpa.properties.hibernate.dialect=
+
+# JWT config
+jwt.secret=
+jwt.access.expiration=
+jwt.refresh.expiration=

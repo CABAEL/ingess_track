@@ -25,6 +25,9 @@ public class UserCredentialDto {
     @NotBlank
     private int role;
 
+    @NotBlank
+    private String user_secret;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

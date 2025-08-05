@@ -15,6 +15,7 @@ public class UserCredentialMapper{
         userCredential.getUserName(),
         userCredential.getPassWord(),
         userCredential.getRole(),
+        userCredential.getUserSecret(),
         userCredential.getCreatedAt(),
         userCredential.getUpdatedAt()
         );
@@ -30,6 +31,7 @@ public class UserCredentialMapper{
                 dto.getUsername(),
                 dto.getPassword(),
                 dto.getRole(),
+                dto.getUser_secret(),
                 dto.getCreatedAt(),
                 dto.getUpdatedAt()
         );

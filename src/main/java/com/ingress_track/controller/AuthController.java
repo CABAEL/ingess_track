@@ -4,6 +4,7 @@ package com.ingress_track.controller;
 import com.ingress_track.dto.AuthRequestDto;
 import com.ingress_track.dto.AuthResponseDto;
 import com.ingress_track.service.AuthService;
+import com.ingress_track.util.IpAddressUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,10 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponseDto> requestAuth(@Valid @RequestBody AuthRequestDto authRequestDto, HttpServletRequest request){
 
-        AuthResponseDto authResponseDto = authService.AuthenticateUser(authRequestDto);
+        String clientIp = IpAddressUtil.getClientIp(request);
+        String userAgent = request.getHeader("user-agent");
+
+        AuthResponseDto authResponseDto = authService.AuthenticateUser(authRequestDto , clientIp, userAgent);
         return ResponseEntity.status(200).body(authResponseDto);
 
     }
